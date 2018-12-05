@@ -8,6 +8,9 @@
     <typeAliases>
         <!-- <typeAlias type="com.atguigu.day03_mybaits.test1.User" alias="_User"/> -->
         <package name="com.bjhl.mybaits.study.bean"/>
+
+        <!-- demo8 -->
+        <package name="com.bjhl.mybaits.study.demo8_advance_query.bo"/>
     </typeAliases>
 
     <!--
@@ -27,6 +30,59 @@
     </environments>
 
     <mappers>
+        <!-- demo1 -->
         <mapper resource="com/bjhl/mybaits/study/demo1_helloworld/UserMapper.xml"/>
+
+        <!-- demo2 -->
+        <mapper resource="com/bjhl/mybaits/study/demo2_original_dev/UserMapper.xml"/>
+
+        <!-- demo3 -->
+        <mapper class="com.bjhl.mybaits.study.demo3_annotation_dev.UserMapper"/>
+
+        <!-- demo4 -->
+        <mapper class="com.bjhl.mybaits.study.demo4_dao_dev.UserDao"/>
+        <mapper resource="com/bjhl/mybaits/study/demo4_dao_dev/UserMapper.xml"/>
+
+        <!-- demo5 -->
+        <mapper class="com.bjhl.mybaits.study.demo5_dynamic_sql.UserDao"/>
+        <mapper resource="com/bjhl/mybaits/study/demo5_dynamic_sql/UserMapper.xml"/>
+
+        <!-- demo8 -->
+        <!--
+            将包内的映射器接口实现全部注册为映射器
+            http://www.mybatis.org/mybatis-3/zh/configuration.html#mappers
+
+            注意：在如果只用package 去扫描的话，接口类名必须和mapper.xml 文件名称一致
+            在整合spring-mybatis 可以不要求一样
+
+            spring 整合mybatis
+            <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+                <property name="dataSource" ref="mainDataSource"/>
+                <property name="configLocation" value="classpath:mybatis-config.xml"/>
+                <property name="mapperLocations">
+                    <array>
+                        <value>classpath*:mapper/**/*.xml</value>
+                    </array>
+                </property>
+            </bean>
+
+            <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+                <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+                <property name="basePackage">
+                    <value>
+                        com.baijia.growthbase.dal.common.mapper.dao,
+                        com.baijia.growthbase.dal.fenxiao.dao,
+                        com.baijia.growthbase.dal.coursesystem.common.dao,
+                        com.baijia.growthbase.dal.coursesystem.core.dao,
+                        com.baijia.growthbase.dal.coursesystem.pintuan.dao,
+                        com.baijia.growthbase.dal.contenthouse.dao,
+                        com.baijia.growthbase.dal.microweb.dao,
+                        com.baijia.growthbase.dal.coursesystem.assist.dao
+                    </value>
+                </property>
+            </bean>
+        -->
+        <package name="com.bjhl.mybaits.study.demo8_advance_query.dao" />
+
     </mappers>
 </configuration>

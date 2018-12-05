@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjhl.mybaits.study.demo8_advance_query.dao.HusbandDao">
+
+    <!-- 根据id查询得到一个user对象 -->
+    <select id="getById" parameterType="int" resultType="com.bjhl.mybaits.study.bean.Husband">
+	 	select * from t_mybatis_husband where id=#{id}
+	</select>
+
+
+    <!--
+        方式一：嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集
+		         封装联表查询的数据(去除重复的数据)
+    -->
+    <resultMap id="appleOfMyEyeMap1" type="AppleOfMyEye">
+        <id column="h_id" property="boyId" />
+        <result column="h_name" property="boyName"/>
+        <association property="wife" javaType="Wife">
+            <id column="w_id" property="id" />
+            <result column="w_name" property="name"/>
+        </association>
+    </resultMap>
+
+    <!--
+		##2. 执行两次查询
+		select  * from t_mybatis_husbandn where id = #{husbandId,jdbcType=INTEGER}
+		select  * from t_mybatis_wife where id = #{wifeId,jdbcType=INTEGER}
+    -->
+    <resultMap id="appleOfMyEyeMap2" type="AppleOfMyEye">
+        <id column="id" property="boyId" />
+        <result column="name" property="boyName"/>
+        <association property="wife" column="wife_id" select="getWifeByWifeId">
+        </association>
+    </resultMap>
+
+
+    <resultMap id="familyWithNoChildrenMap1" type="FamilyWithNoChildren">
+        <id column="h_id" property="husbandId" />
+        <result column="h_name" property="husbandName"/>
+
+        <association property="wife" javaType="Wife">
+            <id column="w_id" property="id" />
+            <result column="w_name" property="name"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="familyWithNoChildrenMap2" type="FamilyWithNoChildren">
+        <id column="id" property="husbandId" />
+        <result column="name" property="husbandName"/>
+        <association property="wife" column="wife_id" select="getWifeByWifeId">
+        </association>
+    </resultMap>
+
+
+    <resultMap id="familyWithChildrenMap1" type="FamilyWithChildren">
+
+        <id column="h_id" property="husbandId" />
+        <result column="h_name" property="husbandName"/>
+
+        <association property="wife" javaType="Wife">
+            <id column="w_id" property="id" />
+            <result column="w_name" property="name"/>
+        </association>
+
+        <collection property="children" ofType="Children">
+            <id column="c_id" property="id" />
+            <result column="c_name" property="name"/>
+            <result column="c_alias" property="alias"/>
+            <result column="c_father_id" property="fatherId"/>
+        </collection>
+
+    </resultMap>
+
+    <resultMap id="familyWithChildrenMap2" type="FamilyWithChildren">
+        <id column="id" property="husbandId" />
+        <result column="name" property="husbandName"/>
+        <association property="wife" column="wife_id" select="getWifeByWifeId">
+        </association>
+        <collection property="children" column="id" select="getChildrenByFatherId"></collection>
+    </resultMap>
+
+    <select id="getWifeByWifeId" parameterType="int" resultType="Wife">
+	 	select  * from t_mybatis_wife where id = #{wifeId,jdbcType=INTEGER}
+	</select>
+
+    <select id="getChildrenByFatherId" parameterType="int" resultType="Children">
+	 	select  * from t_mybatis_children where father_id = #{fatherId,jdbcType=INTEGER}
+	</select>
+
+    <!-- ####################################  appleOfMyEye start  ##################################### -->
+    <select id="getAppleOfMyEyeByMethodByHusBandMethod1" parameterType="int" resultMap="appleOfMyEyeMap1">
+	 	select * from t_mybatis_husband where #{husbandId,jdbcType=INTEGER}
+	</select>
+
+    <select id="getAppleOfMyEyeByMethodByHusBandMethod2" parameterType="int" resultMap="appleOfMyEyeMap2">
+	 	select  * from t_mybatis_husband where id = #{husbandId,jdbcType=INTEGER}
+	</select>
+
+
+    <!-- ####################################  appleOfMyEye end  ##################################### -->
+
+
+    <!-- ####################################  FamilyWithNoChildren start  ##################################### -->
+    <select id="getFamilyWithNoChildrenByMethodByHusBandMethod1" parameterType="int" resultMap="familyWithNoChildrenMap1">
+	 	select
+	 	  h.id as h_id,
+	 	  h.name as h_name,
+	 	  h.wife_id as h_wife_id,
+	 	  w.id as w_id,
+	 	  w.name as w_name
+	 	from
+	 	  t_mybatis_husband h
+	 	inner join
+	 	  t_mybatis_wife w
+	 	on
+	 	  h.wife_id = w.id
+	 	where
+	 	  h.id = #{husbandId,jdbcType=INTEGER}
+	</select>
+
+    <select id="getFamilyWithNoChildrenByMethodByHusBandMethod2" parameterType="int" resultMap="familyWithNoChildrenMap2">
+	 	select * from t_mybatis_husband where id = #{husbandId,jdbcType=INTEGER}
+	</select>
+    <!-- ####################################  FamilyWithNoChildren end  ##################################### -->
+
+
+    <!-- ####################################  FamilyWithChildren start  ##################################### -->
+    <select id="getFamilyWithChildrenByMethodByHusBandMethod1" parameterType="int" resultMap="familyWithChildrenMap1">
+	 	select
+	 	  h.id as h_id,
+	 	  h.name as h_name,
+	 	  h.wife_id as h_wife_id,
+	 	  w.id as w_id,
+	 	  w.name as w_name,
+	 	  c.id as c_id,
+	 	  c.name as c_name,
+	 	  c.alias as c_alias,
+	 	  c.sex as c_sex,
+	 	  c.father_id as c_father_id
+	 	from
+	 	  t_mybatis_husband h,
+	 	  t_mybatis_wife w,
+	 	  t_mybatis_children c
+	 	where
+		  h.wife_id = w.id
+		  and
+		  h.id = c.father_id
+		  and
+	 	  h.id = #{husbandId,jdbcType=INTEGER}
+	</select>
+
+
+    <select id="getFamilyWithChildrenByMethodByHusBandMethod2" parameterType="int" resultMap="familyWithChildrenMap2">
+	 	select * from t_mybatis_husband where id=#{husbandId,jdbcType=INTEGER}
+	</select>
+    <!-- ####################################  FamilyWithChildren end  ##################################### -->
+
+</mapper>
