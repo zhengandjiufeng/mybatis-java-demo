@@ -53,7 +53,7 @@ VALUES
 -- 活动表
 CREATE TABLE `t_mybatis_activity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) DEFAULT NULL,
+  `name` varchar(256) DEFAULT NULL,
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
