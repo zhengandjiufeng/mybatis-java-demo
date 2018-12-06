@@ -50,5 +50,19 @@ VALUES
 	(4, '刘诺一', NULL, 1, 5),
 	(5, '刘霓娜', NULL, 0, 5);
 
+-- 活动表
+CREATE TABLE `t_mybatis_activity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `t_mybatis_activity` (`id`, `name`, `create_time`, `update_time`)
+VALUES
+	(1, 'double 11', '2018-12-06 16:50:23', '2018-12-06 16:50:23');
+
+
 
 
