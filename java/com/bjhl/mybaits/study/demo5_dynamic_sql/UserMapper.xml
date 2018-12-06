@@ -64,4 +64,18 @@
             </if>
         </where>
 	</select>
+
+    <select id="getUserMap" resultType="com.bjhl.mybaits.study.bean.User">
+	 	select * from t_mybatis_user
+	</select>
+
+    <select id="getUserCount" resultType="java.lang.Integer">
+	 	select count(*) from t_mybatis_user
+	</select>
+
+    <select id="existUser" resultType="java.lang.Boolean">
+	 	select count(*) from t_mybatis_user where id = #{userId}
+	</select>
+
+
 </mapper>

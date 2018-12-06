@@ -1,9 +1,11 @@
 package com.bjhl.mybaits.study.demo5_dynamic_sql;
 
 import com.bjhl.mybaits.study.bean.User;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: zhengzhixiong@baijiahulian.com
@@ -64,4 +66,23 @@ public interface UserDao {
     List<User> getUserByUsers(@Param("users") List<User> users);
 
 
+    /**
+     * 获取所有用户的map 集合
+     * @return
+     */
+    @MapKey("id")
+    Map<Integer, User> getUserMap();
+
+    /**
+     * 获取用户总数
+     * @return
+     */
+    Integer getUserCount();
+
+    /**
+     * 是否存在该用户
+     * @param userId
+     * @return
+     */
+    Boolean existUser(Integer userId);
 }

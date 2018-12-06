@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: zhengzhixiong@baijiahulian.com
@@ -19,13 +20,17 @@ public class AppMain {
 
     public static void main(String[] args){
 
-        getUserById();
+//        getUserById();
 //        getUserByAgeRange();
 //        getUserByNameNoSqlInject();
 //        getUserByNameHasSqlInject();
 //        getUserByIdsArray();
 //        getUserByIdsList();
 //        getUserByUsers();
+//        getUserMap();
+//        getUserCount();
+        existUser();
+
     }
 
     private static void getUserById() {
@@ -103,6 +108,30 @@ public class AppMain {
 
         System.out.println("getUserByUsers：" + res);
 
+    }
+
+    private static void getUserMap() {
+        SqlSession session = SessionFactoryUtil.getFactory().openSession();
+        UserDao userDao = session.getMapper(UserDao.class);
+
+        Map<Integer, User> userMap = userDao.getUserMap();
+
+        System.out.println("getUserMap:" + userMap);
+    }
+
+    private static void getUserCount() {
+        SqlSession session = SessionFactoryUtil.getFactory().openSession();
+        UserDao userDao = session.getMapper(UserDao.class);
+        Integer count = userDao.getUserCount();
+        System.out.printf("getUserCount:" + count);
+    }
+
+    private static void existUser() {
+        SqlSession session = SessionFactoryUtil.getFactory().openSession();
+        UserDao userDao = session.getMapper(UserDao.class);
+        Integer userId = 20;
+        Boolean isExist = userDao.existUser(userId);
+        System.out.printf("existUser:" + isExist);
     }
 
 
