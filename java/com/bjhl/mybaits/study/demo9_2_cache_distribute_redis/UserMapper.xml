@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjhl.mybaits.study.demo9_2_cache_distribute_redis.UserDao">
+
+    <!-- 表示开启二级缓存 -->
+    <!--
+    flushInterval（清空缓存的时间间隔）: 单位毫秒，可以被设置为任意的正整数。
+        默认情况是不设置，也就是没有刷新间隔，缓存仅仅调用语句时刷新。
+    size（引用数目）: 可以被设置为任意正整数，要记住你缓存的对象数目和你运行环境的可用内存资源数目。默认值是1024。
+    readOnly（只读）:属性可以被设置为true或false。只读的缓存会给所有调用者返回缓存对象的相同实例。
+        因此这些对象不能被修改。这提供了很重要的性能优势。可读写的缓存会返回缓存对象的拷贝（通过序列化）。这会慢一些，但是安全，因此默认是false。
+    eviction（回收策略）: 默认的是 LRU:
+        1.LRU – 最近最少使用的:移除最长时间不被使用的对象。
+        2.FIFO – 先进先出:按对象进入缓存的顺序来移除它们。
+        3.SOFT – 软引用:移除基于垃圾回收器状态和软引用规则的对象。
+        4.WEAK – 弱引用:更积极地移除基于垃圾收集器状态和弱引用规则的对象。
+    blocking（是否使用阻塞缓存）: 默认为false，当指定为true时将采用BlockingCache进行封装，blocking，阻塞的意思，
+        使用BlockingCache会在查询缓存时锁住对应的Key，如果缓存命中了则会释放对应的锁，否则会在查询数据库以后再释放锁，
+        这样可以阻止并发情况下多个线程同时查询数据，详情可参考BlockingCache的源码。
+    type（缓存类）：可指定使用的缓存类，mybatis默认使用HashMap进行缓存
+    -->
+    <cache type="org.mybatis.caches.redis.RedisCache" blocking="false"
+           flushInterval="0" readOnly="true" size="1024" eviction="FIFO"/>
+
+
+    <!-- 保存用户信息 -->
+    <!--
+    获取主键Id 方式1
+    <insert id="saveUser" parameterType="com.bjhl.mybaits.study.bean.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `t_mybatis_user` (`name`, `id_no`, `age`)
+        VALUES
+            ( #{name}, #{idNo}, #{age})
+    </insert>
+
+    获取主键Id 方式2
+    <insert id="saveUser" parameterType="com.bjhl.mybaits.study.bean.User">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `t_mybatis_user` (`name`, `id_no`, `age`)
+        VALUES
+            ( #{name}, #{idNo}, #{age})
+    </insert>
+    -->
+    <insert id="saveUser" parameterType="com.bjhl.mybaits.study.bean.User">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `t_mybatis_user` (`name`, `id_no`, `age`)
+        VALUES
+        ( #{name}, #{idNo}, #{age})
+    </insert>
+
+    <!-- 根据用户Id删除用户信息-->
+    <delete id="deleteByUserId" parameterType="java.lang.Integer">
+        delete from `t_mybatis_user` where id=#{id}
+    </delete>
+
+    <!--
+    根据id查询得到一个user对象
+
+    知识点：
+    flushCache默认为false，表示任何时候语句被调用，都不会去清空本地缓存和二级缓存。
+    useCache默认为true，表示会将本条语句的结果进行二级缓存。
+    在insert、update、delete语句时： flushCache默认为true，表示任何时候语句被调用，都会导致本地缓存和二级缓存被清空。 useCache属性在该情况下没有。update 的时候如果 flushCache="false"，则当你更新后，查询的数据数据还是老的数据。
+    -->
+    <select id="getUser" parameterType="int" resultType="com.bjhl.mybaits.study.bean.User" >
+	 	select * from t_mybatis_user where id=#{id}
+	</select>
+
+    <!-- 根据主键更新用户信息 -->
+    <update id="updateUser" parameterType="com.bjhl.mybaits.study.bean.User" >
+	 	update t_mybatis_user set name = #{name}, age = #{age}, id_no = #{idNo} where id=#{id}
+	</update>
+
+
+</mapper>

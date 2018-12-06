@@ -1,12 +1,14 @@
 package com.bjhl.mybaits.study.bean;
 
+import java.io.Serializable;
+
 /**
  * @author: zhengzhixiong@baijiahulian.com
  * @date: 2018/12/5
  * @time: 11:56 AM
  * Description:
  */
-public class User{
+public class User implements Serializable {
 
     private int id;
     private String name;

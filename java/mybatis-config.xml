@@ -4,6 +4,15 @@
 
     <properties resource="db.properties"/>
 
+    <!--settings-->
+    <settings>
+        <!-- 是否开启自动驼峰命名规则 -->
+        <!--<setting name="mapUnderscoreToCamelCase" value="true"/>-->
+
+        <!-- 全局地开启或关闭配置文件中的所有映射器已经配置的任何缓存。 默认值 true-->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
     <!-- 配置实体类的别名 -->
     <typeAliases>
         <!-- <typeAlias type="com.atguigu.day03_mybaits.test1.User" alias="_User"/> -->
@@ -47,7 +56,19 @@
         <mapper class="com.bjhl.mybaits.study.demo5_dynamic_sql.UserDao"/>
         <mapper resource="com/bjhl/mybaits/study/demo5_dynamic_sql/UserMapper.xml"/>
 
-        <!-- demo8 -->
+        <!-- demo6 -->
+        <mapper class="com.bjhl.mybaits.study.demo6_config.UserDao"/>
+        <mapper resource="com/bjhl/mybaits/study/demo6_config/UserMapper.xml"/>
+
+        <!-- demo9_1 -->
+        <mapper class="com.bjhl.mybaits.study.demo9_1_cache_local.UserDao"/>
+        <mapper resource="com/bjhl/mybaits/study/demo9_1_cache_local/UserMapper.xml"/>
+
+        <!-- demo9_2 -->
+        <mapper class="com.bjhl.mybaits.study.demo9_2_cache_distribute_redis.UserDao"/>
+        <mapper resource="com/bjhl/mybaits/study/demo9_2_cache_distribute_redis/UserMapper.xml"/>
+
+        <!-- demo8 *****package 必须在mappers 最后面**** -->
         <!--
             将包内的映射器接口实现全部注册为映射器
             http://www.mybatis.org/mybatis-3/zh/configuration.html#mappers
@@ -83,6 +104,7 @@
             </bean>
         -->
         <package name="com.bjhl.mybaits.study.demo8_advance_query.dao" />
+
 
     </mappers>
 </configuration>
